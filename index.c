@@ -1,18 +1,18 @@
 #include <HX711.h>
 #include <ESP8266WiFi.h>
 
-// DEFINIÇÕES DE PINOS
+// DEFININDO OS PINOS
 #define pinDT  D2
 #define pinSCK D3
 #define pinBotao D4
 
-// INSTANCIANDO OBJETOS
+// INSTANCIANDO OS OBJETOS
 HX711 scale;
 
-// DECLARAÇÃO DE VARIÁVEIS
+// DECLARANDO VARIÁVEIS
 float medida = 0;
 
-// CONFIGURAÇÕES DA REDE WI-FI
+// CONFIGURAÇÕES DO WI-FI
 const char* ssid = "";
 const char* password = "";
 const char* serverIP = "";
@@ -23,7 +23,7 @@ WiFiClient client;
 void setup() {
   Serial.begin(115200);
 
-  // CONECTAR À REDE WI-FI
+  // LOOP DA CONEXÃO DO WIFI
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -31,17 +31,17 @@ void setup() {
   }
   Serial.println("Conectado à rede Wi-Fi!");
 
-  scale.begin(pinDT, pinSCK); // CONFIGURANDO OS PINOS DA BALANÇA
-  scale.set_scale(-60000); // LIMPANDO O VALOR DA ESCALA
+  scale.begin(pinDT, pinSCK); 
+  scale.set_scale(); // DEFININDO A TARA
 
   delay(2000);
-  scale.tare(); // ZERANDO A BALANÇA PARA DESCONSIDERAR A MASSA DA ESTRUTURA
+  scale.tare(); // ZERANDO A BALANÇA JÁ COM A CALIBRAGEM
 
   Serial.println("Balança Zerada");
 }
 
 void loop() {
-  medida = scale.get_units(5); // SALVANDO NA VARIAVEL O VALOR DA MÉDIA DE 5 MEDIDAS
+  medida = scale.get_units(5); 
   Serial.println(medida, 3); // ENVIANDO PARA MONITOR SERIAL A MEDIDA COM 3 CASAS DECIMAIS
 
   if (client.connect(serverIP, 80)) {
